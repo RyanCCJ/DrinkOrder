@@ -9,6 +9,6 @@ node_modules/
 npm-debug.log
 
 # Menu
-*.jpg
-*.png
-*.txt
+menu/*.jpg
+menu/*.png
+base64/*.txt
