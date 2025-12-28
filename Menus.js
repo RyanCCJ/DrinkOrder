@@ -4,9 +4,14 @@ const MENUS = {
             "id": "50lan",
             "name": "五十嵐",
             "style": {
-                "primaryColor": "#FFD700", // Yellow
-                "secondaryColor": "#003366", // Blue
-                "fontFamily": "'Noto Sans TC', sans-serif"
+                "primaryColor": "#003366", // Brand Blue (Text/Headers)
+                "secondaryColor": "#FFFFFF", // White
+                "accentColor": "#FFD700", // Brand Yellow (Backgrounds/Highlights)
+                "backgroundColor": "#ffe562", // Light Yellow Background
+                "logo": IMG_50LAN_LOGO,
+                "menuImage": IMG_50LAN_MENU,
+                "fontFamily": "'Noto Sans TC', sans-serif",
+                "layoutMode": "list" // Text-focused layout logic
             },
             "categories": [
                 {

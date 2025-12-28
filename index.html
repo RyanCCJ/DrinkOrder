@@ -1,433 +1,655 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <base target="_top">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-      :root {
-        --primary: #333;
-        --secondary: #fff;
-        --accent: #eee;
-        --font: 'Noto Sans TC', sans-serif;
-      }
-      
-      body {
-        font-family: var(--font);
-        margin: 0;
-        padding: 0;
-        background-color: #f9f9f9;
-        color: #333;
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-      }
 
-      /* Layout */
-      #app {
-        display: flex;
-        flex: 1;
-        overflow: hidden;
-      }
+<head>
+  <base target="_top">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #333;
+      --secondary: #fff;
+      --accent: #eee;
+      --bg-color: #f9f9f9;
+      /* New: Global background */
+      --font: 'Noto Sans TC', sans-serif;
+    }
 
-      /* Sidebar */
-      #sidebar {
-        width: 200px;
-        background: #fff;
-        border-right: 1px solid #ddd;
-        padding: 20px 0;
-        display: flex;
-        flex-direction: column;
-        overflow-y: auto;
-      }
-      .shop-btn {
-        padding: 15px 20px;
-        cursor: pointer;
-        border-left: 4px solid transparent;
-        transition: all 0.2s;
-        font-size: 1.1em;
-      }
-      .shop-btn:hover {
-        background-color: #f0f0f0;
-      }
-      .shop-btn.active {
-        border-left-color: var(--primary);
-        font-weight: bold;
-        background-color: #f5f5f5;
-      }
+    body {
+      font-family: var(--font);
+      margin: 0;
+      padding: 0;
+      background-color: #eef;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
 
-      /* Main Content */
-      #main {
-        flex: 1;
-        overflow-y: auto;
-        padding: 20px;
-        background: var(--secondary);
-      }
-      
-      header {
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 2px solid var(--primary);
-      }
-      h1 { margin: 0; color: var(--primary); }
+    /* Layout */
+    #app {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
 
-      /* Menu Grid */
-      .category-title {
-        font-size: 1.2em;
-        margin: 20px 0 10px 0;
-        color: var(--primary);
-        font-weight: bold;
-      }
-      .menu-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 15px;
-      }
-      .menu-item {
-        background: #fff;
-        border: 1px solid #eee;
-        border-radius: 8px;
-        padding: 15px;
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
-        text-align: center;
-      }
-      .menu-item:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        border-color: var(--primary);
-      }
-      .item-name { font-weight: bold; margin-bottom: 5px; }
+    /* Sidebar */
+    #sidebar {
+      width: 200px;
+      background: #fff;
+      border-right: 1px solid #ddd;
+      padding: 20px 0;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+      z-index: 10;
+    }
 
-      /* Modal/Drawer for Order (Simple for MVP) */
-      #order-modal {
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,0.5);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-      }
-      .modal-content {
-        background: #fff;
-        width: 90%;
-        max-width: 500px;
-        border-radius: 12px;
-        padding: 25px;
-        position: relative;
-        max-height: 90vh;
-        overflow-y: auto;
-      }
-      .close-btn {
-        position: absolute;
-        top: 15px; right: 15px;
-        background: none; border: none; font-size: 1.5em; cursor: pointer;
-      }
-      .form-group { margin-bottom: 15px; }
-      label { display: block; margin-bottom: 5px; font-weight: bold; }
-      select, input[type="text"] {
-        width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em;
-      }
-      .checkbox-group label {
-        display: inline-block;
-        margin-right: 10px;
-        font-weight: normal;
-      }
-      button.submit-btn {
-        width: 100%;
-        padding: 15px;
-        background: var(--primary);
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        font-size: 1.1em;
-        cursor: pointer;
-        margin-top: 10px;
-      }
-    </style>
-  </head>
-  <body>
+    .shop-btn {
+      padding: 15px 20px;
+      cursor: pointer;
+      border-left: 4px solid transparent;
+      transition: all 0.2s;
+      font-size: 1.1em;
+      color: #555;
+    }
 
-    <div id="app">
-      <!-- Loading -->
-      <div id="loading" style="padding: 50px; text-align: center; width: 100%;">
-        載入菜單中...
-      </div>
+    .shop-btn:hover {
+      background-color: #f0f0f0;
+      color: #000;
+    }
 
-      <div id="content-area" style="display:none; display: flex; width: 100%; height: 100%;">
-        <nav id="sidebar">
-          <!-- Shop Buttons injected here -->
-        </nav>
-        
-        <main id="main">
-          <header>
-            <h1 id="shop-title">Shop Name</h1>
-          </header>
-          <div id="menu-container">
-            <!-- Menu items injected here -->
-          </div>
-        </main>
-      </div>
+    .shop-btn.active {
+      border-left-color: var(--primary);
+      font-weight: bold;
+      background-color: #f5f5f5;
+      color: var(--primary);
+    }
+
+    /* Main Content */
+    #main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      background: var(--bg-color);
+      /* Dynamic Background */
+      transition: background-color 0.3s;
+    }
+
+    header {
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--primary);
+    }
+
+    /* Menu Layouts */
+
+    /* Common */
+    .category-title {
+      font-size: 1.3em;
+      margin: 25px 0 15px 0;
+      color: var(--primary);
+      font-weight: bold;
+      padding-left: 10px;
+      border-left: 5px solid var(--accent);
+      /* Brand accent marker */
+    }
+
+    /* Grid Mode (Default/Card) */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .menu-item-card {
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 15px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-align: center;
+    }
+
+    .menu-item-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-color: var(--primary);
+    }
+
+    /* List Mode (50 Lan Style) */
+    .menu-list-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .menu-category-block {
+      background: rgba(255, 255, 255, 0.6);
+      /* Slight white overlay for readability */
+      padding: 15px;
+      border-radius: 8px;
+      flex: 1 1 300px;
+      /* Responsive columns */
+      border-top: 3px solid var(--primary);
+    }
+
+    .menu-category-block .category-title {
+      margin-top: 0;
+      border-left: none;
+      border-bottom: 1px solid var(--primary);
+      padding-bottom: 5px;
+      font-size: 1.2em;
+    }
+
+    .menu-list-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 5px;
+      border-bottom: 1px dashed #ccc;
+      /* Dotted line like paper menu */
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .menu-list-item:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .menu-list-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-name {
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .item-price {
+      color: var(--primary);
+      font-family: monospace;
+      font-size: 1.1em;
+    }
+
+
+    /* Modal/Drawer */
+    #order-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(2px);
+    }
+
+    .modal-content {
+      background: #fff;
+      width: 90%;
+      max-width: 500px;
+      border-radius: 12px;
+      padding: 25px;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      border-top: 5px solid var(--primary);
+      /* Brand border on modal */
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 1.5em;
+      cursor: pointer;
+      color: #999;
+    }
+
+    .close-btn:hover {
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    select,
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+      /* Prevent zoom on mobile */
+      background: #fdfdfd;
+    }
+
+    select:focus,
+    input[type="text"]:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+
+    .checkbox-group label {
+      display: inline-block;
+      margin-right: 15px;
+      font-weight: normal;
+      cursor: pointer;
+      padding: 5px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+    }
+
+    .checkbox-group label:hover {
+      background: #f5f5f5;
+    }
+
+    /* Size Radio Button Styling */
+    .radio-group label {
+      display: inline-block;
+      margin-right: 15px;
+      cursor: pointer;
+      font-weight: normal;
+    }
+
+    button.submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.2em;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.1s;
+    }
+
+    button.submit-btn:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+    <!-- Loading -->
+    <div id="loading" style="padding: 50px; text-align: center; width: 100%;">
+      載入菜單中...
     </div>
 
-    <!-- Order Modal -->
-    <div id="order-modal">
-      <div class="modal-content">
-        <button class="close-btn" onclick="closeModal()">&times;</button>
-        <h2 id="modal-drink-name">Drink Name</h2>
-        
-        <div class="form-group">
-          <label>尺寸</label>
-          <div id="size-options"></div>
-        </div>
+    <div id="content-area" style="display:none; display: flex; width: 100%; height: 100%;">
+      <nav id="sidebar">
+        <!-- Shop Buttons injected here -->
+      </nav>
 
-        <div class="form-group">
-          <label>甜度</label>
-          <select id="sugar-select"></select>
+      <main id="main">
+        <header>
+          <h1 id="shop-title">Shop Name</h1>
+          <button id="view-menu-btn" onclick="toggleMenuImage()"
+            style="display:none; padding: 5px 10px; cursor: pointer; background: var(--primary); color: #fff; border: none; border-radius: 4px;">查看菜單</button>
+        </header>
+        <div id="original-menu-container" style="display: none; margin-bottom: 20px; text-align: center;">
+          <img id="menu-img-display" src=""
+            style="max-width: 100%; border: 2px solid var(--primary); border-radius: 8px;">
         </div>
-
-        <div class="form-group">
-          <label>冰塊</label>
-          <select id="ice-select"></select>
+        <div id="menu-container">
+          <!-- Menu items injected here -->
         </div>
-
-        <div class="form-group">
-          <label>加料</label>
-          <div id="toppings-container"></div>
-        </div>
-
-        <div class="form-group">
-          <label>訂購人 (選填)</label>
-          <input type="text" id="user-name" placeholder="你的名字">
-        </div>
-        
-        <div class="form-group">
-          <label>備註</label>
-          <input type="text" id="note" placeholder="例如：裝滿">
-        </div>
-
-        <div class="form-group" style="text-align: right; font-weight: bold; font-size: 1.2em;">
-           總金額: $<span id="total-price">0</span>
-        </div>
-
-        <button class="submit-btn" onclick="submitOrder()">送出訂單</button>
-      </div>
+      </main>
     </div>
+  </div>
 
-    <script>
-      let MENU_DATA = null;
-      let currentShop = null;
-      let currentDrink = null;
-      let currentPriceBase = 0;
+  <!-- Order Modal -->
+  <div id="order-modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal()">&times;</button>
+      <h2 id="modal-drink-name" style="margin-top:0; color: var(--primary);">Drink Name</h2>
 
-      // Init
-      window.onload = function() {
-        google.script.run.withSuccessHandler(initApp).getMenuData();
-      };
+      <div class="form-group">
+        <label>尺寸</label>
+        <div id="size-options" class="radio-group"></div>
+      </div>
 
-      function initApp(data) {
-        MENU_DATA = data;
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('content-area').style.display = 'flex';
-        renderSidebar();
-        // Select first shop by default
-        if (MENU_DATA.shops.length > 0) {
-          selectShop(MENU_DATA.shops[0].id);
-        }
+      <div class="form-group">
+        <label>甜度</label>
+        <select id="sugar-select"></select>
+      </div>
+
+      <div class="form-group">
+        <label>冰塊</label>
+        <select id="ice-select"></select>
+      </div>
+
+      <div class="form-group">
+        <label>加料</label>
+        <div id="toppings-container" class="checkbox-group"></div>
+      </div>
+
+      <div class="form-group">
+        <label>訂購人 (選填)</label>
+        <input type="text" id="user-name" placeholder="你的名字">
+      </div>
+
+      <div class="form-group">
+        <label>備註</label>
+        <input type="text" id="note" placeholder="例如：裝滿">
+      </div>
+
+      <div class="form-group" style="text-align: right; font-weight: bold; font-size: 1.4em; color: var(--primary);">
+        總金額: $<span id="total-price">0</span>
+      </div>
+
+      <button class="submit-btn" onclick="submitOrder()">送出訂單</button>
+    </div>
+  </div>
+
+  <script>
+    let MENU_DATA = null;
+    let currentShop = null;
+    let currentDrink = null;
+
+    // Init
+    window.onload = function () {
+      google.script.run.withSuccessHandler(initApp).getMenuData();
+    };
+
+    function initApp(data) {
+      MENU_DATA = data;
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('content-area').style.display = 'flex';
+      renderSidebar();
+      if (MENU_DATA.shops.length > 0) {
+        selectShop(MENU_DATA.shops[0].id);
+      }
+    }
+
+    function renderSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.innerHTML = '';
+      MENU_DATA.shops.forEach(shop => {
+        const btn = document.createElement('div');
+        btn.className = 'shop-btn';
+        btn.innerText = shop.name;
+        btn.onclick = () => selectShop(shop.id);
+        btn.dataset.id = shop.id;
+        sidebar.appendChild(btn);
+      });
+    }
+
+    function selectShop(shopId) {
+      currentShop = MENU_DATA.shops.find(s => s.id === shopId);
+
+      // Update Theme vars
+      const root = document.documentElement;
+      const s = currentShop.style;
+      root.style.setProperty('--primary', s.primaryColor || '#333');
+      root.style.setProperty('--secondary', s.secondaryColor || '#fff');
+      root.style.setProperty('--accent', s.accentColor || '#eee');
+      root.style.setProperty('--bg-color', s.backgroundColor || '#f9f9f9');
+      root.style.setProperty('--font', s.fontFamily || 'sans-serif');
+
+      // Sidebar active state
+      document.querySelectorAll('.shop-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector(`.shop-btn[data-id="${shopId}"]`).classList.add('active');
+
+      document.querySelector(`.shop-btn[data-id="${shopId}"]`).classList.add('active');
+
+      const titleEl = document.getElementById('shop-title');
+      if (currentShop.style.logo) {
+        titleEl.innerHTML = `<img src="${currentShop.style.logo}" alt="${currentShop.name}" referrerpolicy="no-referrer" style="height: 50px; vertical-align: middle;"> ${currentShop.name}`;
+      } else {
+        titleEl.innerText = currentShop.name;
       }
 
-      function renderSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        sidebar.innerHTML = '';
-        MENU_DATA.shops.forEach(shop => {
-          const btn = document.createElement('div');
-          btn.className = 'shop-btn';
-          btn.innerText = shop.name;
-          btn.onclick = () => selectShop(shop.id);
-          btn.dataset.id = shop.id;
-          sidebar.appendChild(btn);
-        });
+
+      // Handle Menu Image Button
+      const menuBtn = document.getElementById('view-menu-btn');
+      const menuImgContainer = document.getElementById('original-menu-container');
+      const menuImg = document.getElementById('menu-img-display');
+
+      menuImgContainer.style.display = 'none'; // Reset to hidden on shop switch
+
+      if (currentShop.style.menuImage) {
+        menuBtn.style.display = 'block';
+        menuImg.src = currentShop.style.menuImage;
+        menuImg.setAttribute('referrerpolicy', 'no-referrer');
+      } else {
+        menuImg.removeAttribute('referrerpolicy');
+        menuBtn.style.display = 'none';
+        menuImg.src = '';
       }
 
-      function selectShop(shopId) {
-        currentShop = MENU_DATA.shops.find(s => s.id === shopId);
-        
-        // Update Theme
-        const root = document.documentElement;
-        root.style.setProperty('--primary', currentShop.style.primaryColor);
-        root.style.setProperty('--secondary', '#ffffff'); // Keep plain for readability or use store logic
-        root.style.setProperty('--font', currentShop.style.fontFamily || 'sans-serif');
+      renderMenu();
+    }
 
-        // Update UI
-        document.querySelectorAll('.shop-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector(`.shop-btn[data-id="${shopId}"]`).classList.add('active');
-        document.getElementById('shop-title').innerText = currentShop.name;
+    function renderMenu() {
+      const container = document.getElementById('menu-container');
+      container.innerHTML = '';
 
-        renderMenu();
+      if (!currentShop.categories || currentShop.categories.length === 0) {
+        container.innerHTML = '<p>尚無菜單資料</p>';
+        return;
       }
 
-      function renderMenu() {
-        const container = document.getElementById('menu-container');
-        container.innerHTML = '';
+      const layoutMode = currentShop.style.layoutMode || 'grid';
 
-        if (!currentShop.categories || currentShop.categories.length === 0) {
-          container.innerHTML = '<p>尚無菜單資料</p>';
-          return;
-        }
+      // Container wrapper for List mode to handle masonry-like layout
+      let wrapper;
+      if (layoutMode === 'list') {
+        wrapper = document.createElement('div');
+        wrapper.className = 'menu-list-container';
+        container.appendChild(wrapper);
+      } else {
+        wrapper = container; // Grid mode writes directly or creates separate blocks
+      }
 
-        currentShop.categories.forEach(cat => {
+      currentShop.categories.forEach(cat => {
+        // Render Logic Breakdown
+        if (layoutMode === 'list') {
+          // LIST LAYOUT (50 Lan Style)
+          const block = document.createElement('div');
+          block.className = 'menu-category-block';
+
           const title = document.createElement('div');
           title.className = 'category-title';
           title.innerText = cat.name;
-          container.appendChild(title);
+          block.appendChild(title);
+
+          cat.items.forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'menu-list-item';
+
+            const prices = Object.values(item.prices);
+            const priceStr = prices.length > 0 ? `$${Math.min(...prices)}` : '';
+
+            row.innerHTML = `<span class="item-name">${item.name}</span><span class="item-price">${priceStr}</span>`;
+            row.onclick = () => openModal(item);
+            block.appendChild(row);
+          });
+          wrapper.appendChild(block);
+
+        } else {
+          // GRID LAYOUT (Default)
+          const title = document.createElement('div');
+          title.className = 'category-title';
+          title.innerText = cat.name;
+          wrapper.appendChild(title);
 
           const grid = document.createElement('div');
           grid.className = 'menu-grid';
-          
+
           cat.items.forEach(item => {
             const card = document.createElement('div');
-            card.className = 'menu-item';
-            
-            // Show price range
+            card.className = 'menu-item-card';
+
             const prices = Object.values(item.prices);
             const priceStr = prices.length > 0 ? `$${Math.min(...prices)}` : '';
-            
+
             card.innerHTML = `<div class="item-name">${item.name}</div><div>${priceStr}</div>`;
             card.onclick = () => openModal(item);
             grid.appendChild(card);
           });
-          container.appendChild(grid);
-        });
-      }
-
-      function openModal(item) {
-        currentDrink = item;
-        document.getElementById('modal-drink-name').innerText = currentDrink.name;
-        
-        // Render Sizes
-        const sizeContainer = document.getElementById('size-options');
-        sizeContainer.innerHTML = '';
-        const sizes = Object.keys(item.prices);
-        sizes.forEach((size, index) => {
-           const label = document.createElement('label');
-           label.style.fontWeight = 'normal';
-           label.style.display = 'inline-block';
-           label.style.marginRight = '15px';
-           const radio = document.createElement('input');
-           radio.type = 'radio';
-           radio.name = 'size';
-           radio.value = size;
-           radio.dataset.price = item.prices[size];
-           if (index === 0) radio.checked = true;
-           radio.onchange = updatePrice;
-           
-           label.appendChild(radio);
-           label.append(` ${size} ($${item.prices[size]})`);
-           sizeContainer.appendChild(label);
-        });
-
-        // Sugar & Ice
-        const sugarSelect = document.getElementById('sugar-select');
-        sugarSelect.innerHTML = '';
-        currentShop.config.sugar.forEach(s => {
-          const opt = document.createElement('option');
-          opt.value = s;
-          opt.innerText = s;
-          sugarSelect.appendChild(opt);
-        });
-
-        const iceSelect = document.getElementById('ice-select');
-        iceSelect.innerHTML = '';
-        currentShop.config.ice.forEach(i => {
-           const opt = document.createElement('option');
-           opt.value = i;
-           opt.innerText = i;
-           iceSelect.appendChild(opt);
-        });
-
-        // Toppings
-        const toppingsContainer = document.getElementById('toppings-container');
-        toppingsContainer.innerHTML = '';
-        if (currentShop.config.toppings) {
-          currentShop.config.toppings.forEach(t => {
-             const label = document.createElement('label');
-             label.className = 'checkbox-label';
-             label.style.display = 'block';
-             const checkbox = document.createElement('input');
-             checkbox.type = 'checkbox';
-             checkbox.value = t.name;
-             checkbox.dataset.price = t.price;
-             checkbox.onchange = updatePrice;
-             
-             label.appendChild(checkbox);
-             label.append(` ${t.name} (+$${t.price})`);
-             toppingsContainer.appendChild(label);
-          });
+          wrapper.appendChild(grid);
         }
+      });
+    }
 
-        document.getElementById('note').value = '';
-        updatePrice();
-        document.getElementById('order-modal').style.display = 'flex';
-      }
+    function openModal(item) {
+      currentDrink = item;
+      document.getElementById('modal-drink-name').innerText = currentDrink.name;
 
-      function closeModal() {
-        document.getElementById('order-modal').style.display = 'none';
-      }
+      // Sizes
+      const sizeContainer = document.getElementById('size-options');
+      sizeContainer.innerHTML = '';
+      const sizes = Object.keys(item.prices);
+      sizes.forEach((size, index) => {
+        const label = document.createElement('label');
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'size';
+        radio.value = size;
+        radio.dataset.price = item.prices[size];
+        if (index === 0) radio.checked = true;
+        radio.onchange = updatePrice;
 
-      function updatePrice() {
-        // Base Price
-        const selectedSize = document.querySelector('input[name="size"]:checked');
-        if (!selectedSize) return;
-        let price = parseInt(selectedSize.dataset.price);
+        label.appendChild(radio);
+        label.append(` ${size} ($${item.prices[size]})`);
+        sizeContainer.appendChild(label);
+      });
 
-        // Toppings
-        const toppingsInfo = [];
-        document.querySelectorAll('#toppings-container input:checked').forEach(cb => {
-           price += parseInt(cb.dataset.price);
-           toppingsInfo.push(cb.value);
+      // Sugar
+      const sugarSelect = document.getElementById('sugar-select');
+      sugarSelect.innerHTML = '';
+      currentShop.config.sugar.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s;
+        opt.innerText = s;
+        sugarSelect.appendChild(opt);
+      });
+
+      // Ice
+      const iceSelect = document.getElementById('ice-select');
+      iceSelect.innerHTML = '';
+      currentShop.config.ice.forEach(i => {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.innerText = i;
+        iceSelect.appendChild(opt);
+      });
+
+      // Toppings
+      const toppingsContainer = document.getElementById('toppings-container');
+      toppingsContainer.innerHTML = '';
+      if (currentShop.config.toppings) {
+        currentShop.config.toppings.forEach(t => {
+          const label = document.createElement('label');
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.value = t.name;
+          checkbox.dataset.price = t.price;
+          checkbox.onchange = updatePrice;
+
+          label.appendChild(checkbox);
+          label.append(` ${t.name} (+$${t.price})`);
+          toppingsContainer.appendChild(label);
         });
-
-        document.getElementById('total-price').innerText = price;
       }
 
-      function submitOrder() {
-        const selectedSize = document.querySelector('input[name="size"]:checked');
-         const toppings = [];
-        document.querySelectorAll('#toppings-container input:checked').forEach(cb => {
-           toppings.push(cb.value);
-        });
+      document.getElementById('note').value = '';
+      updatePrice();
+      document.getElementById('order-modal').style.display = 'flex';
+    }
 
-        const orderData = {
-          shopName: currentShop.name,
-          drinkName: currentDrink.name,
-          size: selectedSize.value,
-          sugar: document.getElementById('sugar-select').value,
-          ice: document.getElementById('ice-select').value,
-          toppings: toppings,
-          price: document.getElementById('total-price').innerText,
-          userName: document.getElementById('user-name').value,
-          note: document.getElementById('note').value
-        };
+    function closeModal() {
+      document.getElementById('order-modal').style.display = 'none';
+    }
 
-        const btn = document.querySelector('.submit-btn');
-        const originalText = btn.innerText;
-        btn.disabled = true;
-        btn.innerText = '送出中...';
+    function updatePrice() {
+      const selectedSize = document.querySelector('input[name="size"]:checked');
+      if (!selectedSize) return;
+      let price = parseInt(selectedSize.dataset.price);
 
-        google.script.run
-          .withSuccessHandler(function(res) {
-             alert(res.message);
-             btn.disabled = false;
-             btn.innerText = originalText;
-             if (res.success) closeModal();
-          })
-          .withFailureHandler(function(err) {
-             alert('Error: ' + err);
-             btn.disabled = false;
-             btn.innerText = originalText;
-          })
-          .submitOrder(orderData);
+      document.querySelectorAll('#toppings-container input:checked').forEach(cb => {
+        price += parseInt(cb.dataset.price);
+      });
+      document.getElementById('total-price').innerText = price;
+    }
+
+    function submitOrder() {
+      const selectedSize = document.querySelector('input[name="size"]:checked');
+      const toppings = [];
+      document.querySelectorAll('#toppings-container input:checked').forEach(cb => {
+        toppings.push(cb.value);
+      });
+
+      const orderData = {
+        shopName: currentShop.name,
+        drinkName: currentDrink.name,
+        size: selectedSize.value,
+        sugar: document.getElementById('sugar-select').value,
+        ice: document.getElementById('ice-select').value,
+        toppings: toppings,
+        price: document.getElementById('total-price').innerText,
+        userName: document.getElementById('user-name').value,
+        note: document.getElementById('note').value
+      };
+
+      const btn = document.querySelector('.submit-btn');
+      const originalText = btn.innerText;
+      btn.disabled = true;
+      btn.innerText = '送出中...';
+
+      google.script.run
+        .withSuccessHandler(function (res) {
+          alert(res.message);
+          btn.disabled = false;
+          btn.innerText = originalText;
+          if (res.success) closeModal();
+        })
+        .withFailureHandler(function (err) {
+          alert('Error: ' + err);
+          btn.disabled = false;
+          btn.innerText = originalText;
+        })
+        .submitOrder(orderData);
+    }
+    function toggleMenuImage() {
+      const container = document.getElementById('original-menu-container');
+      if (container.style.display === 'none') {
+        container.style.display = 'block';
+      } else {
+        container.style.display = 'none';
       }
-    </script>
-  </body>
+    }
+  </script>
+</body>
+
 </html>
