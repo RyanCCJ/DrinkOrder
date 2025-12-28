@@ -10,6 +10,7 @@
       --secondary: #fff;
       --accent: #eee;
       --bg-color: #f9f9f9;
+      --bg-opacity: 0.6;
       /* New: Global background */
       --font: 'Noto Sans TC', sans-serif;
     }
@@ -135,7 +136,7 @@
     }
 
     .menu-category-block {
-      background: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, var(--bg-opacity));
       /* Slight white overlay for readability */
       padding: 15px;
       border-radius: 8px;
@@ -414,6 +415,7 @@
       root.style.setProperty('--secondary', s.secondaryColor || '#fff');
       root.style.setProperty('--accent', s.accentColor || '#eee');
       root.style.setProperty('--bg-color', s.backgroundColor || '#f9f9f9');
+      root.style.setProperty('--bg-opacity', s.menuItemBgOpacity !== undefined ? s.menuItemBgOpacity : 0.6);
       root.style.setProperty('--font', s.fontFamily || 'sans-serif');
 
       // Sidebar active state
@@ -424,9 +426,9 @@
 
       const titleEl = document.getElementById('shop-title');
       if (currentShop.style.logo) {
-        titleEl.innerHTML = `<img src="${currentShop.style.logo}" alt="${currentShop.name}" referrerpolicy="no-referrer" style="height: 50px; vertical-align: middle;"> ${currentShop.name}`;
+        titleEl.innerHTML = `<img src="${currentShop.style.logo}" alt="${currentShop.name}" referrerpolicy="no-referrer" style="height: 50px; vertical-align: middle;">`;
       } else {
-        titleEl.innerText = currentShop.name;
+        titleEl.innerText = '';
       }
 
 
@@ -487,8 +489,8 @@
             const row = document.createElement('div');
             row.className = 'menu-list-item';
 
-            const prices = Object.values(item.prices);
-            const priceStr = prices.length > 0 ? `$${Math.min(...prices)}` : '';
+            const priceEntries = Object.entries(item.prices);
+            const priceStr = priceEntries.map(([size, price]) => `${size} $${price}`).join(' / ');
 
             row.innerHTML = `<span class="item-name">${item.name}</span><span class="item-price">${priceStr}</span>`;
             row.onclick = () => openModal(item);
@@ -510,8 +512,8 @@
             const card = document.createElement('div');
             card.className = 'menu-item-card';
 
-            const prices = Object.values(item.prices);
-            const priceStr = prices.length > 0 ? `$${Math.min(...prices)}` : '';
+            const priceEntries = Object.entries(item.prices);
+            const priceStr = priceEntries.map(([size, price]) => `${size} $${price}`).join(' / ');
 
             card.innerHTML = `<div class="item-name">${item.name}</div><div>${priceStr}</div>`;
             card.onclick = () => openModal(item);

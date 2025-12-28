@@ -7,3 +7,8 @@
 # Node/Others
 node_modules/
 npm-debug.log
+
+# Menu
+*.jpg
+*.png
+*.txt
