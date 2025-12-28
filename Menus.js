@@ -84,20 +84,20 @@ const MENUS = {
                 {
                     "name": "菜單 MENU",
                     "items": [
-                        { "name": "熟成紅茶", "prices": { "M": 25, "L": 30 } },
-                        { "name": "麗春紅茶", "prices": { "M": 25, "L": 30 } },
-                        { "name": "胭脂紅茶", "prices": { "M": 35, "L": 40 } },
-                        { "name": "雪藏紅茶", "prices": { "M": 45, "L": 55 } },
-                        { "name": "熟成冷露", "prices": { "M": 25, "L": 30 } },
-                        { "name": "雪花冷露", "prices": { "M": 25, "L": 30 } },
-                        { "name": "春芽冷露", "prices": { "M": 25, "L": 30 } },
-                        { "name": "春芽綠茶", "prices": { "M": 25, "L": 30 } },
-                        { "name": "冷露歐蕾", "prices": { "M": 40, "L": 50 } },
-                        { "name": "熟成歐蕾", "prices": { "M": 40, "L": 50 } },
-                        { "name": "白玉歐蕾", "prices": { "M": 50, "L": 60 } },
-                        { "name": "冷露檸果", "prices": { "M": 50, "L": 60 } },
-                        { "name": "熟成檸果", "prices": { "M": 50 } },
-                        { "name": "胭脂多多", "prices": { "M": 40, "L": 50 } }
+                        { "name": "熟成紅茶", "prices": { "M": 25, "L": 30 }, "description": "解炸物/燒烤肉類油膩，茶味濃郁帶果香" },
+                        { "name": "麗春紅茶", "prices": { "M": 25, "L": 30 }, "description": "去除海鮮羶腥，茶味較淡帶花香" },
+                        { "name": "胭脂紅茶", "prices": { "M": 35, "L": 40 }, "description": "絲絨般的蜜桃果香" },
+                        { "name": "雪藏紅茶", "prices": { "M": 45, "L": 55 }, "description": "冰淇淋與紅茶的綿綿情意" },
+                        { "name": "熟成冷露", "prices": { "M": 25, "L": 30 }, "description": "手工冬瓜與茶更神秘比例搭配" },
+                        { "name": "雪花冷露", "prices": { "M": 25, "L": 30 }, "description": "手工冬瓜獨奏" },
+                        { "name": "春芽冷露", "prices": { "M": 25, "L": 30 }, "description": "手工冬瓜綠茶" },
+                        { "name": "春芽綠茶", "prices": { "M": 25, "L": 30 }, "description": "綠茶，糸糸中帶點彔彔" },
+                        { "name": "冷露歐蕾", "prices": { "M": 40, "L": 50 }, "description": "手工冬瓜與鮮奶" },
+                        { "name": "熟成歐蕾", "prices": { "M": 40, "L": 50 }, "description": "熟成鮮奶茶" },
+                        { "name": "白玉歐蕾", "prices": { "M": 50, "L": 60 }, "description": "珍奶不解釋" },
+                        { "name": "冷露檸果", "prices": { "M": 50, "L": 60 }, "description": "古法熬煮冬瓜舞整顆先切檸檬" },
+                        { "name": "熟成檸果", "prices": { "M": 50 }, "description": "每日限量鮮檸紅茶" },
+                        { "name": "胭脂多多", "prices": { "M": 40, "L": 50 }, "description": "蜜桃裡的兒時記憶" }
                     ]
                 }
             ],

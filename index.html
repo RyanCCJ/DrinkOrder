@@ -140,8 +140,8 @@
       /* Slight white overlay for readability */
       padding: 15px;
       border-radius: 8px;
-      flex: 1 1 300px;
-      /* Responsive columns */
+      flex: 1 1 360px;
+      /* Wider columns for long content */
       border-top: 3px solid var(--primary);
     }
 
@@ -156,11 +156,41 @@
     .menu-list-item {
       display: flex;
       justify-content: space-between;
-      padding: 8px 5px;
+      align-items: flex-start;
+      /* Top align for multi-line names */
+      padding: 10px 5px;
       border-bottom: 1px dashed #ccc;
-      /* Dotted line like paper menu */
       cursor: pointer;
       transition: background 0.2s;
+      gap: 15px;
+    }
+
+    .item-name {
+      font-weight: bold;
+      color: var(--primary);
+      flex: 1;
+      /* Take available space */
+    }
+
+    .item-description {
+      font-size: 0.8em;
+      color: #666;
+      flex: 1.5;
+      /* More weight for middle space */
+      text-align: center;
+      line-height: 1.2;
+      font-style: italic;
+      padding: 0 5px;
+    }
+
+    .item-price {
+      font-weight: bold;
+      color: var(--primary);
+      text-align: right;
+      flex-shrink: 0;
+      white-space: nowrap;
+      /* Prevents price breaking */
+      margin-left: auto;
     }
 
     .menu-list-item:hover {
@@ -492,7 +522,11 @@
             const priceEntries = Object.entries(item.prices);
             const priceStr = priceEntries.map(([size, price]) => `${size} $${price}`).join(' / ');
 
-            row.innerHTML = `<span class="item-name">${item.name}</span><span class="item-price">${priceStr}</span>`;
+            let html = `<span class="item-name">${item.name}</span>`;
+            html += `<span class="item-description">${item.description || ''}</span>`;
+            html += `<span class="item-price">${priceStr}</span>`;
+
+            row.innerHTML = html;
             row.onclick = () => openModal(item);
             block.appendChild(row);
           });
@@ -515,7 +549,13 @@
             const priceEntries = Object.entries(item.prices);
             const priceStr = priceEntries.map(([size, price]) => `${size} $${price}`).join(' / ');
 
-            card.innerHTML = `<div class="item-name">${item.name}</div><div>${priceStr}</div>`;
+            let html = `<div class="item-name">${item.name}</div><div>${priceStr}</div>`;
+
+            if (item.description) {
+              html += `<div class="item-description">${item.description}</div>`;
+            }
+
+            card.innerHTML = html;
             card.onclick = () => openModal(item);
             grid.appendChild(card);
           });
